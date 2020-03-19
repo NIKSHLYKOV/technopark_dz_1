@@ -23,19 +23,19 @@ public class NumberDetailFragment extends Fragment {
     public static final String EXTRA_TEXT_COLOR = "TextColor";
 
     // Отображаемое число, переданное от Activity.
-    private int number = 3;
+    private int number;
     private int color;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(LOG_TAG, "onCreate");
 
         // Получаем число.
         try {
             number = getArguments().getInt(EXTRA_NUMBER);
         } catch (NullPointerException e){
             number = 0;
-            Log.e(LOG_TAG, e.getMessage());
         }
 
         // Получаем цвет текста.
@@ -44,22 +44,27 @@ public class NumberDetailFragment extends Fragment {
         }catch (NullPointerException e){
             color = R.color.colorPrimary;
         }
-
-        Log.i(LOG_TAG, "onCreate");
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.i(LOG_TAG, "onCreateView");
+
         // Получаем разметку для фрагмента.
         View view = inflater.inflate(R.layout.fragment_number_detail, null);
-        // Находим TextView и устанавливаем в него наше число.
+
+        // Находим TextView и устанавливаем в него цвет и текст (число).
         TextView tvNumber = view.findViewById(R.id.fragment_number_detail___text_view___number);
         tvNumber.setTextColor(getResources().getColor(color));
         tvNumber.setText(String.valueOf(number));
-        Log.i(LOG_TAG, "onCreateView");
+
+        // Возвращаем View для отрисовки.
         return view;
     }
+
+
+    // Далее идут методы для просмотра взаимодействия между Activity и Fragment.
 
     @Override
     public void onDetach() {

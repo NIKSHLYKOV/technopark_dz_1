@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 
 public class MainActivity extends AppCompatActivity implements NumbersFragment.ReportListener{
+
     // Тег для логирования.
     private static final String LOG_TAG = "MainActivity";
 
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements NumbersFragment.R
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(LOG_TAG, "onCreate");
         setContentView(R.layout.activity_main);
 
         // Получение id layout'а для контента.
@@ -36,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements NumbersFragment.R
                     .add(contentLayoutId, new NumbersFragment(), TAG_NUMBERS_FRAGMENT)
                     .commit();
         }
-        Log.i(LOG_TAG, "onCreate");
     }
 
     /**
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements NumbersFragment.R
      */
     @Override
     public void reportNumber(int number, int resColorId) {
+        Log.i(LOG_TAG, "reportNumber");
         // Создаём Bundle для передачи числа в детализирующий фрагмент.
         Bundle arguments = new Bundle();
         // Создаём детализирующий фрагмент.
@@ -61,6 +63,9 @@ public class MainActivity extends AppCompatActivity implements NumbersFragment.R
                 .addToBackStack(null)
                 .commit();
     }
+
+
+    // Далее идут методы для просмотра взаимодействия между Activity и Fragment.
 
     @Override
     protected void onStart() {

@@ -21,7 +21,8 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
-public class NumbersFragment extends Fragment{
+public class NumbersFragment extends Fragment {
+
     // Тег для логирования.
     private String LOG_TAG = "NumbersFragment";
 
@@ -42,24 +43,28 @@ public class NumbersFragment extends Fragment{
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
+        Log.i(LOG_TAG, "onAttach");
+
+        // Получаем контекст и присваиваем слушателя.
         this.context = context;
         reportListener = (ReportListener) context;
-        Log.i(LOG_TAG, "onAttach");
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.i(LOG_TAG, "onCreate");
 
         // Определяем, какое количество чисел будет отображаться.
-        // Если фрагмент пересоздаётся, то берём последнее числов из Bundle. Иначе берём базовое - 100.
+        // Если фрагмент пересоздаётся, то берём последнее числов из Bundle.
+        // Иначе берём базовое - 100.
         int countNumbers = 100;
         if (savedInstanceState != null)
             countNumbers = savedInstanceState.getInt(KEY_COUNT_NUMBER);
 
         // Заполняем список чисел для последующей передачи его адаптеру.
         numbers = new ArrayList<>();
-        for(int i = 1; i <= countNumbers; i++){
+        for (int i = 1; i <= countNumbers; i++) {
             numbers.add(i);
         }
 
@@ -68,33 +73,39 @@ public class NumbersFragment extends Fragment{
 
         // Закидываем список чисел в адаптер.
         adapter.setNumbers(numbers);
+
         // Устанавливаем обработчик нажатия на элемент RecyclerView.
         adapter.setOnEntryClickListener(new MyRecyclerViewAdapter.OnEntryClickListener() {
             @Override
             public void onEntryClick(View view, int position) {
-                // Получаем числов их элемента.
+                // Получаем число из элемента.
                 int number = MyRecyclerViewAdapter.getNumbers().get(position);
+
                 // Подбираем цвет текста.
                 int color;
                 if (number % 2 == 0)
                     color = R.color.red;
                 else
                     color = R.color.blue;
+
                 // Отправляем число с цветом в Activity.
                 reportListener.reportNumber(MyRecyclerViewAdapter.getNumbers().get(position), color);
             }
         });
-        Log.i(LOG_TAG, "onCreate");
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        Log.i(LOG_TAG, "onCreateView");
+
         // Получаем нашу разметку для фрагмента.
         View view = inflater.inflate(R.layout.fragment_numbers, null);
+
         // Находим View элементы.
         recyclerView = view.findViewById(R.id.fragment_numbers___recycler_view___numbers);
         Button newNumberButton = view.findViewById(R.id.fragment_numbers___button___new_word);
+
         // Присваиваем обработчик нажатия на кнопку добавления нового числа.
         newNumberButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,13 +114,16 @@ public class NumbersFragment extends Fragment{
                 adapter.setNumbers(numbers);
             }
         });
-        Log.i(LOG_TAG, "onCreateView");
+
+        // Возвращаем View для отрисовки.
         return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        Log.i(LOG_TAG, "onStart");
+
         // Находим необходимое количество колонок для RecyclerView.
         // Для горизонтальной ориентации - 4 колонки.
         // Для других случаев (вертикальная/квадратная/неопределена)- 3 колонки.
@@ -117,7 +131,7 @@ public class NumbersFragment extends Fragment{
         if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE)
             spanCount = 4;
 
-        // Устанавливаем RecyclerView LayoutManager, который будет выставлять элементы в определённом порядке.
+        // Устанавливаем RecyclerView GridLayoutManager с количеством колонок.
         recyclerView.setLayoutManager(new GridLayoutManager(context, spanCount));
 
         // Добавляем в RecyclerView разделители по вертикали и по горизонтали, чтобы
@@ -127,21 +141,29 @@ public class NumbersFragment extends Fragment{
 
         // Соединяем RecyclerView с адаптером для него.
         recyclerView.setAdapter(adapter);
-        Log.i(LOG_TAG, "onStart");
+    }
+
+    public interface ReportListener {
+        void reportNumber(int number, int resColorId);
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putInt(KEY_COUNT_NUMBER, numbers.size());
         Log.i(LOG_TAG, "onSaveInstanceState");
+
+        // Сохраняем количество чисел.
+        outState.putInt(KEY_COUNT_NUMBER, numbers.size());
     }
+
+
+    // Далее идут методы для просмотра взаимодействия между Activity и Fragment.
 
     @Override
     public void onDetach() {
         super.onDetach();
-        reportListener = null;
         Log.i(LOG_TAG, "onDetach");
+        reportListener = null;
     }
 
     @Override
@@ -172,9 +194,5 @@ public class NumbersFragment extends Fragment{
     public void onResume() {
         super.onResume();
         Log.i(LOG_TAG, "onResume");
-    }
-
-    public interface ReportListener{
-        void reportNumber(int number, int resColorId);
     }
 }

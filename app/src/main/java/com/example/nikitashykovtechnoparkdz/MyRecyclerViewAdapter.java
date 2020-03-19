@@ -20,7 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.NumbersViewHolder> {
 
-    Context context;
+    private Context context;
 
     // Список с отображаемыми числами.
     private static ArrayList<Integer> numbers = new ArrayList<>();
@@ -35,6 +35,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     public void setOnEntryClickListener(OnEntryClickListener onEntryClickListener) {
         mOnEntryClickListener = onEntryClickListener;
     }
+
 
     class NumbersViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         // TextView, в который мы будем устанавливать число.
@@ -82,18 +83,18 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
 
     @Override
     public void onBindViewHolder(@NonNull final MyRecyclerViewAdapter.NumbersViewHolder holder, final int position) {
-        // Получаем число.
+        // Получаем число и TextView, которая будет его отображать.
         final Integer currentNumber = numbers.get(position);
         TextView numberTextView = holder.number;
-        int color;
+
         // Находим необходимый цвет для числа и устанавливаем его для TextView.
+        int color;
         if (currentNumber % 2 == 0)
             color = R.color.red;
-            //numberTextView.setTextColor(Color.RED);
         else
             color = R.color.blue;
-        //numberTextView.setTextColor(Color.BLUE);
         numberTextView.setTextColor(context.getResources().getColor(color));
+
         // Устанавливаем текст (число) в TextView.
         numberTextView.setText(String.valueOf(currentNumber));
     }
@@ -108,10 +109,6 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         this.numbers = numbers;
         // Уведомляем о том, что данные поменялись.
         notifyDataSetChanged();
-    }
-
-    public void setLastNumber(int number) {
-
     }
 
     public static ArrayList<Integer> getNumbers() {
