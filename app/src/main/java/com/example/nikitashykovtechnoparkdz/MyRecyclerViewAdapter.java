@@ -108,7 +108,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         // Устанавливаем переданный список чисел.
         this.numbers = numbers;
         // Уведомляем о том, что данные поменялись.
-        notifyDataSetChanged();
+        notifyItemInserted(numbers.size() - 1);
     }
 
     public static ArrayList<Integer> getNumbers() {
